@@ -1,0 +1,17 @@
+name: Keep HF Space Alive
+on:
+  schedule:
+    - cron: '0 */12 * * *' # Будет рестартить каждые 12 часов
+  workflow_dispatch: # Чтобы можно было запустить вручную
+
+jobs:
+  wake_up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install HF Hub
+        run: pip install huggingface_hub
+      - name: Restart Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "from huggingface_hub import HfApi; HfApi().restart_space(repo_id='afk_bot/myafkbot', token='${{ secrets.HF_TOKEN }}')"
